@@ -1,0 +1,16 @@
+# Secrets
+.env
+
+# Dépendances Composer (réinstallées avec composer install)
+/vendor/
+
+# Fichiers générés
+.phpunit.result.cache
+.phpunit.cache/
+/build/
+
+# Divers
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
