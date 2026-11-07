@@ -1,0 +1,50 @@
+# Environnement de développement local FantasyRealm
+# Lancement : docker compose up -d
+services:
+  app:
+    build: .
+    ports:
+      - "8090:80"           # application : http://localhost:8090
+    volumes:
+      - ./:/var/www/html    # le code local est monté dans le conteneur
+    env_file: .env
+    depends_on:
+      - mysql
+      - mongo
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Scripts SQL exécutés automatiquement à la première création de la base (ordre alphabétique)
+      - ./database:/docker-entrypoint-initdb.d:ro
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+
+  # Intercepte tous les e-mails envoyés en local : http://localhost:8026
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8026:8025"
+
+  # Interface d'administration MySQL : http://localhost:8082
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
+  mongo_data:

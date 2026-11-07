@@ -1,0 +1,9 @@
+# Front controller : toute URL qui ne correspond pas à un fichier réel
+# (CSS, JS, image) est envoyée à index.php, qui choisit la page à afficher.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Pas de listing des dossiers
+Options -Indexes
