@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Manuel d'utilisation - FantasyRealm</title>
+<link rel="stylesheet" href="doc.css">
+<style>
+    .ecran { border: 1px solid #cfc5ad; max-height: 120mm; width: auto; }
+    .etapes li { margin-bottom: 1.5mm; }
+</style>
+</head>
+<body>
+
+<section class="couverture">
+    <img src="../../public/assets/img/logo.svg" alt="">
+    <p class="sous-titre">FantasyRealm Online</p>
+    <h1>Manuel d'utilisation</h1>
+    <p>Système de gestion de personnages - PixelVerse Studios</p>
+    <p>Présentation, identifiants de test et parcours pas à pas</p>
+</section>
+
+<section class="saut">
+    <h2>1. Présentation de l'application</h2>
+    <p>FantasyRealm est le portail web qui permet aux joueurs du MMORPG <em>FantasyRealm Online</em> de créer, personnaliser,
+        équiper et partager leurs personnages. Chaque personnage est dessiné automatiquement à partir de ses traits
+        (visage, yeux, nez, bouche, coiffure, couleurs) et de son équipement, et apparaît « en action » avant même d'être enregistré.</p>
+    <p>Quatre profils utilisent l'application :</p>
+    <table>
+        <tr><th>Profil</th><th>Ce qu'il peut faire</th></tr>
+        <tr><td>Visiteur</td><td>Consulter l'accueil, la galerie des personnages partagés (avec filtres) et leur détail, écrire au support.</td></tr>
+        <tr><td>Joueur</td><td>Tout ce que fait le visiteur, plus : créer, modifier, équiper, partager, dupliquer et supprimer ses personnages ;
+            donner un avis sur les personnages des autres ; changer son mot de passe ; supprimer son compte.</td></tr>
+        <tr><td>Employé</td><td>Approuver ou rejeter les noms de personnages (motif obligatoire), modérer les avis, gérer la bibliothèque d'articles,
+            supprimer un personnage, suspendre ou supprimer un compte joueur.</td></tr>
+        <tr><td>Administrateur</td><td>Tout ce que fait l'employé, plus : créer, modifier (mot de passe), suspendre et supprimer les comptes employés ;
+            consulter les logs de personnalisation.</td></tr>
+    </table>
+
+    <h2>2. Accès et identifiants de test</h2>
+    <p>Application en ligne : <strong>[À COMPLÉTER : lien du déploiement]</strong> - en local : <code>http://localhost:8090</code>
+        (voir le README pour l'installation).</p>
+    <table>
+        <tr><th>Profil</th><th>E-mail</th><th>Mot de passe</th></tr>
+        <tr><td>Administrateur</td><td>admin@pixelverse-studios.local</td><td>Admin#Fantasy2026</td></tr>
+        <tr><td>Employé (José)</td><td>jose@pixelverse-studios.local</td><td>Employe#Fantasy2026</td></tr>
+        <tr><td>Joueuse (Lyra)</td><td>lyra@exemple.fr</td><td>Joueur#Fantasy2026</td></tr>
+        <tr><td>Joueur (Thorin)</td><td>thorin@exemple.fr</td><td>Joueur#Fantasy2026</td></tr>
+        <tr><td>Joueur (Kael)</td><td>kael@exemple.fr</td><td>Joueur#Fantasy2026</td></tr>
+    </table>
+    <p class="note">Les e-mails envoyés par l'application (validation d'un nom, nouvel avis, mot de passe provisoire, contact)
+        sont visibles en local dans Mailpit : <code>http://localhost:8026</code>.</p>
+</section>
+
+<section class="saut">
+    <h2>3. Parcours visiteur</h2>
+    <h3>Découvrir la galerie</h3>
+    <ol class="etapes">
+        <li>Depuis le menu, cliquez sur <strong>Personnages</strong>.</li>
+        <li>Filtrez par <strong>genre</strong>, par <strong>date de création</strong> (du… au…) ou par <strong>pseudo</strong> du créateur, puis cliquez sur <strong>Filtrer</strong>.</li>
+        <li>Cliquez sur un personnage pour voir son détail : apparence, équipement et avis validés.</li>
+    </ol>
+    <figure><img class="ecran" src="captures/galerie-bureau.png" alt="Galerie avec filtres"><figcaption>La galerie et ses filtres</figcaption></figure>
+
+    <h3>Contacter le support</h3>
+    <ol class="etapes">
+        <li>Menu <strong>Contact</strong> : indiquez votre e-mail, votre pseudo de joueur et le détail de votre demande.</li>
+        <li>Le pseudo est vérifié : s'il n'existe pas, un message l'indique et l'envoi est refusé.</li>
+        <li>Connecté, l'e-mail et le pseudo sont remplis automatiquement.</li>
+    </ol>
+</section>
+
+<section class="saut">
+    <h2>4. Parcours joueur</h2>
+    <h3>Créer un compte et se connecter</h3>
+    <ol class="etapes">
+        <li>Menu <strong>Connexion</strong>, puis <strong>Créez votre compte</strong>.</li>
+        <li>Choisissez un e-mail et un pseudo (tous deux uniques) et un mot de passe d'au moins 12 caractères avec une
+            majuscule, une minuscule, un chiffre et un caractère spécial. Une liste indique en direct les règles respectées.</li>
+        <li>Après l'inscription ou la connexion, vous arrivez dans <strong>Mon espace</strong>.</li>
+    </ol>
+    <h3>Mot de passe oublié</h3>
+    <ol class="etapes">
+        <li>Sur la page de connexion, cliquez sur <strong>Mot de passe oublié ?</strong> et saisissez l'e-mail <em>et</em> le pseudo du compte.</li>
+        <li>Un mot de passe provisoire sécurisé est envoyé par e-mail. À la connexion suivante, l'application impose d'en choisir un nouveau.</li>
+    </ol>
+
+    <h3>Créer et personnaliser un personnage</h3>
+    <ol class="etapes">
+        <li><strong>Mon espace</strong> &gt; <strong>Créer un personnage</strong>.</li>
+        <li>Donnez un nom (unique), choisissez le genre, la forme du visage, des yeux, du nez, de la bouche, la coiffure
+            et les couleurs de peau, de cheveux et d'yeux. L'aperçu à gauche se met à jour à chaque choix.</li>
+        <li>Validez : le personnage est créé avec le statut <em>Nom en attente de validation</em>.</li>
+        <li>Quand un employé a approuvé le nom (vous recevez un e-mail), ouvrez <strong>Modifier</strong> : la partie
+            <strong>Équipement</strong> devient disponible (vêtement, armure, arme, accessoire).</li>
+    </ol>
+    <figure><img class="ecran" src="captures/atelier-bureau.png" alt="Atelier de personnalisation"><figcaption>L'atelier : aperçu en direct et équipement</figcaption></figure>
+</section>
+
+<section class="saut">
+    <h3>Gérer ses personnages</h3>
+    <figure><img class="ecran" src="captures/espace-bureau.png" alt="Mon espace"><figcaption>Mon espace</figcaption></figure>
+    <ul>
+        <li><strong>Partager</strong> : le personnage (validé) apparaît dans la galerie. Le bouton devient <strong>Arrêt du partage</strong>.</li>
+        <li><strong>Dupliquer</strong> : saisissez un nouveau nom ; la copie garde l'apparence et l'équipement, son nom est à valider.</li>
+        <li><strong>Supprimer</strong> : après confirmation, le personnage et ses avis sont supprimés.</li>
+        <li>Changer le nom d'un personnage le renvoie en validation et arrête son partage.</li>
+    </ul>
+    <h3>Donner un avis</h3>
+    <p>Sur la fiche d'un personnage partagé par un autre joueur, choisissez une note de 1 à 5 et écrivez un commentaire.
+        L'avis est visible après validation par un employé ; le propriétaire du personnage reçoit alors un e-mail.</p>
+    <h3>Mon compte</h3>
+    <p>En bas de <strong>Mon espace</strong> : changer de mot de passe, ou supprimer le compte et toutes ses données (droit à l'effacement, RGPD).</p>
+</section>
+
+<section class="saut">
+    <h2>5. Parcours employé</h2>
+    <p>Connectez-vous avec <code>jose@pixelverse-studios.local</code> : vous arrivez dans l'<strong>Espace employé</strong>.</p>
+    <figure><img class="ecran" src="captures/gestion-bureau.png" alt="Espace employé"><figcaption>Noms et avis à valider</figcaption></figure>
+    <ul>
+        <li><strong>À valider</strong> : <em>Approuver</em> un nom, ou <em>Rejeter</em> en saisissant un motif obligatoire
+            (le joueur le reçoit par e-mail et le personnage est supprimé). Modérer les avis : <em>Approuver</em> ou <em>Refuser</em>.</li>
+        <li><strong>Articles</strong> : ajouter un article (nom, catégorie et forme, couleur, description), le désactiver
+            (il n'est plus proposé mais reste sur les personnages qui le portent) ou le supprimer.</li>
+        <li><strong>Personnages</strong> : liste complète, suppression d'un personnage.</li>
+        <li><strong>Joueurs</strong> : suspendre (le joueur ne peut plus se connecter et ses personnages disparaissent de la galerie), réactiver ou supprimer un compte.</li>
+    </ul>
+
+    <h2>6. Parcours administrateur</h2>
+    <p>Connectez-vous avec <code>admin@pixelverse-studios.local</code>. L'administrateur dispose de tous les menus de l'employé, plus :</p>
+    <ul>
+        <li><strong>Employés</strong> : créer un compte employé (e-mail et mot de passe), modifier son mot de passe, le suspendre ou le supprimer.
+            Il n'est pas possible de créer un administrateur depuis l'application.</li>
+        <li><strong>Logs</strong> : historique des modifications des personnages (créations, noms, apparence, équipement,
+            partages, duplications, suppressions) et des actions de modération, filtrable par type, nom de personnage et pseudo.</li>
+    </ul>
+    <figure><img class="ecran" src="captures/logs-bureau.png" alt="Logs"><figcaption>Logs de personnalisation (MongoDB)</figcaption></figure>
+</section>
+<script>window.__pret = true;</script>
+</body>
+</html>
