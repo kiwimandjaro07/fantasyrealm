@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Gestion de projet - FantasyRealm</title>
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+
+<section class="couverture">
+    <img src="../../public/assets/img/logo.svg" alt="">
+    <p class="sous-titre">FantasyRealm Online</p>
+    <h1>Gestion de projet</h1>
+    <p>Méthode, outils, découpage et déroulement</p>
+</section>
+
+<section class="saut">
+    <h2>1. Contexte et contraintes</h2>
+    <p>Projet individuel réalisé dans le cadre de l'évaluation en cours de formation (ECF) du titre professionnel
+        Développeur Web et Web Mobile, avec une date de rendu fixée au 19/11/2026. Le temps disponible était très limité
+        (activité professionnelle à mon compte et vie de famille en parallèle).</p>
+    <p class="note"><strong>Transparence :</strong> l'ensemble du projet (analyse, code, tests et documentation) a été réalisé
+        avec l'assistant d'intelligence artificielle Claude (Anthropic), que j'ai piloté : je fixais les objectifs à partir
+        de l'énoncé, l'IA proposait et écrivait, je relisais, testais et validais. Ce mode de travail est décrit dans ma copie.</p>
+
+    <h2>2. Méthode : Kanban</h2>
+    <p>J'ai choisi une méthode agile de type <strong>Kanban</strong>, adaptée à un développeur seul : pas de sprints à durée fixe,
+        mais un flux continu de tâches visibles sur un tableau, avec une limite de travail en cours (une seule fonctionnalité
+        en développement à la fois). Chaque carte correspond à une fonctionnalité de l'énoncé et à une branche Git.</p>
+    <table>
+        <tr><th>Colonne</th><th>Rôle</th></tr>
+        <tr><td>À faire (backlog)</td><td>Toutes les fonctionnalités extraites de l'énoncé, classées par priorité.</td></tr>
+        <tr><td>En cours</td><td>Une seule carte à la fois ; une branche <code>feature/…</code> est créée.</td></tr>
+        <tr><td>Tests</td><td>Tests manuels du parcours, tests unitaires, vérifications de sécurité et d'accessibilité.</td></tr>
+        <tr><td>Terminé</td><td>Branche fusionnée dans <code>develop</code>.</td></tr>
+    </table>
+    <p>Outil : <strong>[À COMPLÉTER : Trello ou Notion, avec le lien]</strong>. Les cartes à créer sont listées en section 4.</p>
+
+    <h2>3. Organisation Git</h2>
+    <ul>
+        <li><code>main</code> : branche principale, version stable et déployée.</li>
+        <li><code>develop</code> : branche d'intégration.</li>
+        <li><code>feature/…</code> : une branche par fonctionnalité, créée depuis <code>develop</code>, fusionnée dans <code>develop</code>
+            après test (<code>git merge --no-ff</code> pour garder la trace de chaque fonctionnalité dans l'historique).</li>
+        <li>Quand <code>develop</code> est testée dans son ensemble, elle est fusionnée dans <code>main</code>.</li>
+    </ul>
+    <pre>main     ●───────────────────────────────────────────────●  (version livrée)
+          \                                               /
+develop    ●──●─────●─────●─────●─────●─────●─────●─────●
+               \   / \   / \   / \   / \   / \   / \   /
+feature/        ●─●   ●─●   ●─●   ●─●   ●─●   ●─●   ●─●
+           environnement · base-de-donnees · comptes · pages-publiques
+           personnages · espace-employe · espace-admin · tests · documentation</pre>
+</section>
+
+<section class="saut">
+    <h2>4. Découpage en tâches (cartes Kanban)</h2>
+    <table>
+        <tr><th>#</th><th>Carte</th><th>Contenu</th><th>Branche</th></tr>
+        <tr><td>1</td><td>Analyse du besoin</td><td>Lecture de l'énoncé, liste des fonctionnalités par profil, choix techniques</td><td>-</td></tr>
+        <tr><td>2</td><td>Maquettes</td><td>Charte graphique, wireframes et maquettes (3 bureau, 3 mobile)</td><td>feature/documentation</td></tr>
+        <tr><td>3</td><td>Environnement</td><td>Docker (PHP, MySQL, MongoDB, Mailpit, phpMyAdmin), Composer, Git</td><td>feature/environnement</td></tr>
+        <tr><td>4</td><td>Base de données</td><td>MCD, script SQL de création, jeu de données, modèles PDO</td><td>feature/base-de-donnees</td></tr>
+        <tr><td>5</td><td>Comptes</td><td>Inscription, connexion, mot de passe oublié, changement imposé, sécurité</td><td>feature/comptes</td></tr>
+        <tr><td>6</td><td>Pages publiques</td><td>Accueil, menu, pied de page, contact, mentions légales, CGV, confidentialité</td><td>feature/pages-publiques</td></tr>
+        <tr><td>7</td><td>Personnages</td><td>Création, aperçu en direct, équipement, partage, duplication, suppression, galerie, avis</td><td>feature/personnages</td></tr>
+        <tr><td>8</td><td>Espace employé</td><td>Validation des noms et avis, articles, comptes joueurs</td><td>feature/espace-employe</td></tr>
+        <tr><td>9</td><td>Espace administrateur</td><td>Comptes employés, logs MongoDB</td><td>feature/espace-admin</td></tr>
+        <tr><td>10</td><td>Tests</td><td>Tests unitaires PHPUnit, tests des parcours, tests de sécurité</td><td>feature/tests</td></tr>
+        <tr><td>11</td><td>Documentation</td><td>README, manuel, documentation technique, gestion de projet</td><td>feature/documentation</td></tr>
+        <tr><td>12</td><td>Déploiement</td><td>Mise en ligne (alwaysdata + MongoDB Atlas) et vérifications</td><td>main</td></tr>
+        <tr><td>13</td><td>Copie</td><td>Rédaction et relecture de la copie à rendre</td><td>-</td></tr>
+    </table>
+
+    <h2>5. Planning</h2>
+    <table>
+        <tr><th>Période</th><th>Travail</th></tr>
+        <tr><td>7 - 8 novembre 2026</td><td>Analyse, environnement, base de données, développement de toutes les fonctionnalités, tests</td></tr>
+        <tr><td>8 novembre 2026</td><td>Charte graphique, maquettes, documentation</td></tr>
+        <tr><td>Du 9 au 15 novembre 2026</td><td>[À COMPLÉTER] Relecture du code et des documents, tableau Kanban, dépôt GitHub, déploiement</td></tr>
+        <tr><td>Avant le 19 novembre 2026</td><td>Relecture finale de la copie et dépôt sur la plateforme Studi</td></tr>
+    </table>
+
+    <h2>6. Suivi de la qualité</h2>
+    <ul>
+        <li><strong>Définition de « terminé »</strong> pour chaque carte : parcours testé dans le navigateur, aucune erreur PHP,
+            contrôles de sécurité (CSRF, droits, saisies invalides) vérifiés, code commenté, branche fusionnée.</li>
+        <li><strong>Tests automatisés</strong> : 25 tests PHPUnit (validation, mots de passe, CSRF, rendu des avatars).</li>
+        <li><strong>Tests de parcours</strong> : script de requêtes HTTP rejouant les parcours joueur, employé et administrateur.</li>
+        <li><strong>Accessibilité</strong> : navigation au clavier, lecteur d'écran sur les composants dynamiques, contrastes calculés.</li>
+    </ul>
+</section>
+<script>window.__pret = true;</script>
+</body>
+</html>

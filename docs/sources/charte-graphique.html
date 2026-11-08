@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Charte graphique - FantasyRealm</title>
+<link rel="stylesheet" href="doc.css">
+<style>
+    .nuancier { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+    .couleur { border: 1px solid #cfc5ad; border-radius: 2mm; overflow: hidden; break-inside: avoid; }
+    .couleur .echantillon { height: 18mm; }
+    .couleur p { margin: 0; padding: 2mm; font-size: 8.5pt; }
+    .typo-titre { font-family: Georgia, serif; font-size: 22pt; color: var(--violet); margin: 0; }
+    .typo-texte { font-family: "Segoe UI", system-ui, sans-serif; font-size: 12pt; margin: 0; }
+    .bouton { display: inline-block; padding: 2mm 6mm; border-radius: 20mm; font-weight: 600; margin-right: 3mm; border: 2px solid; }
+    /* Wireframes : basse fidélité, en niveaux de gris */
+    .wf { border: 1.5px solid #555; border-radius: 2mm; background: #fff; font-size: 7pt; color: #444; padding: 2mm; break-inside: avoid; }
+    .wf .b { background: #ddd; border: 1px dashed #888; border-radius: 1mm; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1mm; margin-bottom: 1.5mm; }
+    .wf .g { display: grid; gap: 1.5mm; }
+    .wf .x { background: #bbb; }
+    .bureau { width: 100%; }
+    .mobile { width: 46mm; }
+    .rangee { display: grid; grid-template-columns: 1fr 50mm; gap: 6mm; align-items: start; margin-bottom: 4mm; break-inside: avoid; }
+    .capture { border: 1px solid #cfc5ad; }
+    .bloc { break-inside: avoid; }
+    .maquette { display: flex; gap: 6mm; justify-content: center; align-items: flex-start; }
+    .maquette .capture { max-height: 222mm; width: auto; }
+    .maquette .capture.b { max-width: 128mm; }
+    .maquette .capture.m { max-width: 46mm; }
+</style>
+</head>
+<body>
+
+<section class="couverture">
+    <img src="../../public/assets/img/logo.svg" alt="">
+    <p class="sous-titre">FantasyRealm Online</p>
+    <h1>Charte graphique</h1>
+    <p>Système de gestion de personnages - PixelVerse Studios</p>
+    <p>Palette, typographies, composants, wireframes et maquettes</p>
+</section>
+
+<section class="saut">
+    <h2>1. Intentions</h2>
+    <p>L'univers de FantasyRealm Online est un monde de fantasy médiévale. L'interface évoque un <strong>grimoire</strong> :
+        un fond couleur parchemin, des titres à empattements, un violet profond pour la nuit et la magie, et un or
+        réservé aux accents (liens actifs, cadres, étoiles). L'ambiance reste sobre pour que les avatars des joueurs
+        soient les vrais héros de chaque page.</p>
+    <p>Contraintes respectées : contraste minimal de 4,5:1 pour tout texte (RGAA, critère 3.2), interface utilisable de
+        320 px à grand écran (conception <em>mobile first</em>), et éco-conception (aucun framework CSS, polices système,
+        images vectorielles SVG générées par le serveur).</p>
+
+    <h2>2. Logo</h2>
+    <div class="deux">
+        <div><img src="../../public/assets/img/logo.svg" alt="Logo FantasyRealm" width="110"></div>
+        <div>
+            <p>Un hexagone violet bordé d'or entourant une étoile à quatre branches : la rose des vents d'un monde à explorer.
+                Le logo est un fichier SVG de moins d'1 ko, net à toutes les tailles, également utilisé comme favicon.</p>
+            <p>Il est toujours accompagné du nom « Fantasy<strong>Realm</strong> », « Realm » étant écrit en or.</p>
+        </div>
+    </div>
+
+    <h2>3. Palette de couleurs</h2>
+    <div class="nuancier">
+        <div class="couleur"><div class="echantillon" style="background:#1c1430"></div><p><strong>Nuit</strong><br>#1C1430<br>En-tête, pied, texte</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#3b2a66"></div><p><strong>Violet</strong><br>#3B2A66<br>Couleur principale, boutons, titres</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#d4a63a"></div><p><strong>Or</strong><br>#D4A63A<br>Accents sur fond sombre</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#7a5810"></div><p><strong>Or foncé</strong><br>#7A5810<br>Accents sur fond clair</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#f5ecd7"></div><p><strong>Parchemin</strong><br>#F5ECD7<br>Fond de page</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#fffaf0"></div><p><strong>Vélin</strong><br>#FFFAF0<br>Fond des cartes</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#9e2f2f"></div><p><strong>Rubis</strong><br>#9E2F2F<br>Erreurs, suppression</p></div>
+        <div class="couleur"><div class="echantillon" style="background:#2b6446"></div><p><strong>Émeraude</strong><br>#2B6446<br>Succès</p></div>
+    </div>
+    <h3>Contrastes vérifiés</h3>
+    <table>
+        <tr><th>Texte</th><th>Fond</th><th>Rapport</th><th>Niveau</th></tr>
+        <tr><td>Nuit #1C1430</td><td>Parchemin #F5ECD7</td><td>15,0:1</td><td>AAA</td></tr>
+        <tr><td>Blanc</td><td>Violet #3B2A66</td><td>12,3:1</td><td>AAA</td></tr>
+        <tr><td>Or #D4A63A</td><td>Nuit #1C1430</td><td>7,8:1</td><td>AAA</td></tr>
+        <tr><td>Or foncé #7A5810</td><td>Vélin #FFFAF0</td><td>6,2:1</td><td>AA</td></tr>
+        <tr><td>Gris #564B69</td><td>Parchemin #F5ECD7</td><td>6,9:1</td><td>AA</td></tr>
+        <tr><td>Blanc</td><td>Rubis #9E2F2F</td><td>7,2:1</td><td>AAA</td></tr>
+    </table>
+    <p class="note">L'or #D4A63A n'est jamais utilisé pour du texte sur fond clair (contraste insuffisant) : on utilise alors l'or foncé.
+        Valeurs calculées avec la formule de luminance relative des WCAG 2.1 (or sur parchemin : 1,9:1, d'où cette règle).</p>
+</section>
+
+<section class="saut">
+    <h2>4. Typographies</h2>
+    <div class="deux">
+        <div class="cadre">
+            <p class="typo-titre">Georgia</p>
+            <p>Titres. Police à empattements, élégante, évoquant les livres anciens. Repli : Palatino Linotype, Book Antiqua, serif.</p>
+        </div>
+        <div class="cadre">
+            <p class="typo-texte">Police système</p>
+            <p>Textes et formulaires : <code>system-ui</code> (Segoe UI sous Windows, San Francisco sous macOS, Roboto sous Android).
+                Très lisible et <strong>déjà installée</strong> : aucun fichier de police à télécharger (éco-conception, rapidité).</p>
+        </div>
+    </div>
+    <table>
+        <tr><th>Élément</th><th>Police</th><th>Taille mobile</th><th>Taille bureau</th></tr>
+        <tr><td>Titre de page (h1)</td><td>Georgia</td><td>1,9 rem</td><td>2,3 rem</td></tr>
+        <tr><td>Titre de section (h2)</td><td>Georgia</td><td>1,4 rem</td><td>1,4 rem</td></tr>
+        <tr><td>Texte courant</td><td>Système</td><td>1 rem (16 px)</td><td>1 rem (16 px)</td></tr>
+        <tr><td>Aide, mentions</td><td>Système</td><td>0,9 rem</td><td>0,9 rem</td></tr>
+    </table>
+
+    <h2>5. Composants</h2>
+    <p>
+        <span class="bouton" style="background:#3b2a66;border-color:#3b2a66;color:#fff">Bouton principal</span>
+        <span class="bouton" style="color:#3b2a66;border-color:#3b2a66">Secondaire</span>
+        <span class="bouton" style="background:#9e2f2f;border-color:#9e2f2f;color:#fff">Supprimer</span>
+    </p>
+    <ul>
+        <li><strong>Boutons</strong> : forme de pilule, hauteur minimale de 44 px (cible tactile confortable).</li>
+        <li><strong>Cartes</strong> : fond vélin, coins arrondis de 12 px, liseré or en haut.</li>
+        <li><strong>Focus clavier</strong> : contour or de 3 px, toujours visible.</li>
+        <li><strong>Champs en erreur</strong> : bordure rubis de 2 px et message précédé de « ⚠ » (l'erreur n'est pas signalée par la seule couleur).</li>
+        <li><strong>Avatars</strong> : illustrations SVG sur fond nuit étoilé, 200 × 260, légère animation « en action » (désactivable).</li>
+        <li><strong>Points de rupture</strong> : moins de 640 px (mobile), 640 à 959 px (tablette), 960 px et plus (bureau).</li>
+    </ul>
+</section>
+
+<section class="saut">
+    <h2>6. Wireframes</h2>
+    <p>Maquettes basse fidélité (structure et hiérarchie, sans couleur) des trois écrans principaux, en version bureau et mobile.</p>
+
+    <div class="bloc">
+    <h3>Accueil</h3>
+    <div class="rangee">
+        <div class="wf bureau">
+            <div class="b x">Logo · Accueil · Personnages · Contact · Connexion</div>
+            <div class="g" style="grid-template-columns: 3fr 2fr"><div class="b" style="height:28mm">Accroche + 2 boutons<br>(Créer / Galerie)</div><div class="b" style="height:28mm">3 derniers avatars</div></div>
+            <div class="b" style="height:10mm">Présentation de PixelVerse Studios</div>
+            <div class="g" style="grid-template-columns: repeat(4,1fr)"><div class="b" style="height:14mm">Avantage 1</div><div class="b" style="height:14mm">Avantage 2</div><div class="b" style="height:14mm">Avantage 3</div><div class="b" style="height:14mm">Avantage 4</div></div>
+            <div class="b" style="height:14mm">Présentation du jeu FantasyRealm Online + dernières créations</div>
+            <div class="b x">Pied : mentions légales · CGV · confidentialité</div>
+        </div>
+        <div class="wf mobile">
+            <div class="b x">Logo · [Menu]</div>
+            <div class="b" style="height:22mm">Accroche<br>Boutons empilés</div>
+            <div class="b" style="height:10mm">Avatars</div>
+            <div class="b" style="height:10mm">Studio</div>
+            <div class="b" style="height:7mm">Avantage 1</div><div class="b" style="height:7mm">Avantage 2</div>
+            <div class="b" style="height:7mm">Avantages 3, 4</div>
+            <div class="b" style="height:10mm">Le jeu</div>
+            <div class="b x">Pied</div>
+        </div>
+    </div>
+    </div>
+
+    <div class="bloc">
+    <h3>Galerie des personnages</h3>
+    <div class="rangee">
+        <div class="wf bureau">
+            <div class="b x">Menu</div>
+            <div class="b" style="height:6mm">Titre « Les personnages »</div>
+            <div class="g" style="grid-template-columns: repeat(4,1fr) 0.6fr"><div class="b">Genre ▾</div><div class="b">Du</div><div class="b">Au</div><div class="b">Pseudo</div><div class="b">Filtrer</div></div>
+            <div class="g" style="grid-template-columns: repeat(4,1fr)">
+                <div class="b" style="height:24mm">Image<br>Nom<br>par Pseudo<br>★★★★</div><div class="b" style="height:24mm">Image<br>Nom<br>par Pseudo</div><div class="b" style="height:24mm">Image<br>Nom<br>par Pseudo</div><div class="b" style="height:24mm">Image<br>Nom<br>par Pseudo</div>
+            </div>
+            <div class="b" style="height:5mm">Pagination 1 2 3</div>
+            <div class="b x">Pied</div>
+        </div>
+        <div class="wf mobile">
+            <div class="b x">Logo · [Menu]</div>
+            <div class="b" style="height:5mm">Titre</div>
+            <div class="b" style="height:16mm">Filtres empilés<br>+ Filtrer</div>
+            <div class="g" style="grid-template-columns: 1fr 1fr"><div class="b" style="height:16mm">Perso</div><div class="b" style="height:16mm">Perso</div><div class="b" style="height:16mm">Perso</div><div class="b" style="height:16mm">Perso</div></div>
+            <div class="b x">Pied</div>
+        </div>
+    </div>
+    </div>
+
+    <div class="bloc">
+    <h3>Atelier de personnalisation (espace joueur)</h3>
+    <div class="rangee">
+        <div class="wf bureau">
+            <div class="b x">Menu</div>
+            <div class="b" style="height:6mm">Titre « Modifier … »</div>
+            <div class="g" style="grid-template-columns: 1fr 2fr">
+                <div class="b" style="height:44mm">Aperçu animé<br>(fixe au défilement)<br><br>[Pause]</div>
+                <div><div class="b" style="height:6mm">Nom</div><div class="b" style="height:6mm">Genre (radio)</div><div class="b" style="height:12mm">Visage · Yeux · Nez · Bouche · Coiffure</div><div class="b" style="height:8mm">Nuanciers : peau, cheveux, yeux</div><div class="b" style="height:10mm">Équipement : vêtement, armure, arme, accessoire</div></div>
+            </div>
+            <div class="b x">Pied</div>
+        </div>
+        <div class="wf mobile">
+            <div class="b x">Logo · [Menu]</div>
+            <div class="b" style="height:5mm">Titre</div>
+            <div class="b" style="height:22mm">Aperçu animé</div>
+            <div class="b" style="height:5mm">Nom</div><div class="b" style="height:5mm">Genre</div>
+            <div class="b" style="height:12mm">Traits (1 colonne)</div>
+            <div class="b" style="height:8mm">Nuanciers</div>
+            <div class="b" style="height:8mm">Équipement</div>
+            <div class="b x">Pied</div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section class="saut">
+    <h2>7. Maquettes (mockups)</h2>
+    <p>Maquettes haute fidélité des trois mêmes écrans. Elles correspondent à l'application réalisée
+        (captures de la version finale, données de démonstration).</p>
+    <div class="bloc">
+    <h3>Accueil</h3>
+    <div class="maquette">
+        <img class="capture b" src="captures/accueil-bureau.png" alt="Maquette bureau de l'accueil">
+        <img class="capture m" src="captures/accueil-mobile.png" alt="Maquette mobile de l'accueil">
+    </div>
+    </div>
+</section>
+<section class="saut">
+    <div class="bloc">
+    <h3>Galerie des personnages</h3>
+    <div class="maquette">
+        <img class="capture b" src="captures/galerie-bureau.png" alt="Maquette bureau de la galerie">
+        <img class="capture m" src="captures/galerie-mobile.png" alt="Maquette mobile de la galerie">
+    </div>
+    </div>
+</section>
+<section class="saut">
+    <h3>Atelier de personnalisation</h3>
+    <div class="maquette">
+        <img class="capture b" src="captures/atelier-bureau.png" alt="Maquette bureau de l'atelier">
+        <img class="capture m" src="captures/atelier-mobile.png" alt="Maquette mobile de l'atelier">
+    </div>
+</section>
+<script>window.__pret = true;</script>
+</body>
+</html>

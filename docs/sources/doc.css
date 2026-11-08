@@ -1,0 +1,32 @@
+/* Mise en page commune des documents PDF (impression A4) */
+@page { size: A4; margin: 16mm 15mm 18mm; }
+:root { --nuit: #1c1430; --violet: #3b2a66; --or: #d4a63a; --or-fonce: #7a5810; --parchemin: #f5ecd7; --gris: #564b69; }
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", system-ui, sans-serif; font-size: 10.5pt; line-height: 1.5; color: var(--nuit); margin: 0; }
+h1, h2, h3 { font-family: Georgia, serif; color: var(--violet); line-height: 1.2; }
+h1 { font-size: 24pt; margin: 0 0 6mm; }
+h2 { font-size: 16pt; margin: 8mm 0 3mm; border-bottom: 2px solid var(--or); padding-bottom: 1mm; break-after: avoid; }
+h3 { font-size: 12.5pt; margin: 5mm 0 2mm; break-after: avoid; }
+p, li { orphans: 3; widows: 3; }
+code, pre { font-family: Consolas, monospace; font-size: 9pt; background: #f4efe3; border-radius: 3px; }
+code { padding: 0 3px; }
+pre { padding: 3mm; white-space: pre-wrap; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 3mm 0; break-inside: avoid; font-size: 9.5pt; }
+th, td { border: 1px solid #cfc5ad; padding: 1.6mm 2mm; text-align: left; vertical-align: top; }
+th { background: var(--violet); color: #fff; }
+img { max-width: 100%; }
+figure { margin: 4mm 0; break-inside: avoid; text-align: center; }
+figcaption { font-size: 9pt; color: var(--gris); margin-top: 1mm; }
+.saut { break-before: page; }
+.couverture { height: 255mm; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    background: radial-gradient(circle at 75% 30%, #4b3a78, var(--nuit)); color: #fff; padding: 20mm; margin: -16mm -15mm 0; }
+.couverture h1 { color: #fff; font-size: 30pt; }
+.couverture .sous-titre { color: var(--or); font-size: 14pt; text-transform: uppercase; letter-spacing: 2pt; }
+.couverture p { color: #e9e2f5; font-size: 12pt; }
+.couverture img { width: 28mm; margin-bottom: 8mm; }
+.note { border-left: 4px solid var(--or); background: #fbf4e2; padding: 2mm 4mm; margin: 3mm 0; break-inside: avoid; }
+.deux { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; align-items: start; }
+.trois { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; align-items: start; }
+.cadre { border: 1px solid #cfc5ad; border-radius: 2mm; padding: 2mm; }
+.sommaire li { margin: 1mm 0; }
+.mermaid { text-align: center; break-inside: avoid; margin: 4mm 0; }

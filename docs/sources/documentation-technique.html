@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Documentation technique - FantasyRealm</title>
+<link rel="stylesheet" href="doc.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+</head>
+<body>
+
+<section class="couverture">
+    <img src="../../public/assets/img/logo.svg" alt="">
+    <p class="sous-titre">FantasyRealm Online</p>
+    <h1>Documentation technique</h1>
+    <p>Choix technologiques, environnement, données, diagrammes, sécurité et déploiement</p>
+</section>
+
+<section class="saut">
+    <h2>1. Réflexions technologiques initiales</h2>
+    <p>L'énoncé impose une base relationnelle et une base non relationnelle et laisse le reste libre. Mes critères :
+        pouvoir <strong>expliquer chaque ligne</strong> devant le jury, couvrir toutes les compétences du titre
+        (front, back, SQL, NoSQL, déploiement), et produire une application légère, sécurisée et accessible.</p>
+    <table>
+        <tr><th>Besoin</th><th>Choix</th><th>Justification</th><th>Alternative écartée</th></tr>
+        <tr><td>Front-end</td><td>HTML5, CSS3, JavaScript natif</td><td>Aucune dépendance, pages légères (éco-conception),
+            maîtrise totale de l'accessibilité. L'interactivité nécessaire (aperçu, contrôles de saisie) reste modeste.</td>
+            <td>Bootstrap (proposé par l'énoncé) : plus lourd, visuel générique ; React : inutile pour des pages surtout serveur.</td></tr>
+        <tr><td>Back-end</td><td>PHP 8.3 sans framework, MVC maison</td><td>Langage du cursus, hébergement simple et peu coûteux,
+            chaque mécanisme (routeur, sessions, CSRF) est écrit et donc expliqué.</td>
+            <td>Symfony : très complet mais masque ces mécanismes ; Node.js : hébergement moins courant en mutualisé.</td></tr>
+        <tr><td>Accès SQL</td><td>PDO, requêtes préparées</td><td>Natif, protège de l'injection SQL, portable (MySQL, MariaDB, PostgreSQL).</td>
+            <td>ORM Doctrine : abstraction qui cache le SQL que l'ECF demande de maîtriser.</td></tr>
+        <tr><td>Base relationnelle</td><td>MySQL 8</td><td>Données fortement liées (comptes, personnages, équipement, avis) :
+            clés étrangères, contraintes UNIQUE et CHECK, transactions.</td><td>PostgreSQL : équivalent, moins répandu chez les hébergeurs mutualisés.</td></tr>
+        <tr><td>Base NoSQL</td><td>MongoDB 7</td><td>Logs de personnalisation : écrits souvent, sans relations, de structure
+            variable selon l'événement ; agrégations faciles pour les statistiques.</td><td>Redis : orienté cache, peu adapté à la consultation d'un historique.</td></tr>
+        <tr><td>Images des personnages</td><td>SVG généré côté serveur</td><td>Pas de bibliothèque d'images ni de fichiers à stocker,
+            rendu net à toute taille, quelques ko par avatar, aperçu instantané.</td><td>Images PNG superposées : lourdes, nombreuses ressources graphiques à produire.</td></tr>
+        <tr><td>E-mails</td><td>PHPMailer (SMTP)</td><td>Bibliothèque de référence, gère l'encodage et le TLS, protège des injections d'en-têtes.</td><td>Fonction mail() : non authentifiée, souvent bloquée.</td></tr>
+        <tr><td>Configuration</td><td>vlucas/phpdotenv</td><td>Secrets dans un fichier <code>.env</code> hors du dépôt Git.</td><td>Constantes en dur : fuite des mots de passe dans Git.</td></tr>
+        <tr><td>Tests</td><td>PHPUnit 11</td><td>Standard PHP.</td><td>-</td></tr>
+    </table>
+
+    <h2>2. Environnement de travail</h2>
+    <ul>
+        <li><strong>Docker Desktop</strong> et <code>docker-compose.yml</code> : cinq conteneurs (Apache + PHP 8.3, MySQL 8, MongoDB 7,
+            Mailpit pour intercepter les e-mails, phpMyAdmin). Toute personne qui clone le dépôt obtient exactement le même environnement,
+            sans rien installer d'autre que Docker. Les versions sont celles de la production.</li>
+        <li><strong>Composer</strong> pour les dépendances PHP (exécuté dans le conteneur).</li>
+        <li><strong>Git</strong> et GitHub, avec les branches <code>main</code>, <code>develop</code> et <code>feature/…</code>.</li>
+        <li><strong>Éditeur de code</strong> : [À PERSONNALISER : VS Code, PhpStorm…], terminal, navigateur et ses outils de développement.</li>
+        <li><strong>Assistant IA</strong> : Claude (Anthropic) dans l'application de bureau Claude Code, utilisé pour l'ensemble du projet.</li>
+        <li><strong>Node.js</strong> : uniquement pour les scripts de documentation (captures et PDF via Edge en mode headless, dossier <code>docs/outils</code>).</li>
+    </ul>
+    <pre>docker compose up -d --build                 # construit et démarre les conteneurs
+docker compose exec app composer install     # dépendances PHP
+docker compose exec app vendor/bin/phpunit   # tests</pre>
+
+    <h2>3. Architecture</h2>
+    <p>Architecture <strong>MVC</strong> légère. Seul le dossier <code>public/</code> est exposé par le serveur web : le code,
+        les vues et le fichier <code>.env</code> ne sont jamais téléchargeables.</p>
+    <pre>public/index.php      point d'entrée unique : configuration, en-têtes de sécurité, session, déclaration des routes
+src/Core/             Router (CSRF + rôles), Auth (sessions), Csrf, Validator, Security, Database (PDO), Mongo, View, Flash
+src/Controllers/      Page, Auth, Contact, Galerie, Espace (joueur), Gestion (employé), Admin
+src/Models/           Utilisateur, Personnage, Accessoire, Avis, TentativeConnexion (MySQL), MessageContact (MongoDB)
+src/Services/         Apparence (options + rendu SVG), ActivityLog (MongoDB), MailService, MotDePasse
+templates/            gabarit commun et vues
+database/             01_schema.sql (création), 02_donnees.sql (données de démonstration)
+tests/                tests PHPUnit</pre>
+</section>
+
+<section class="saut">
+    <h2>4. Modèle conceptuel de données</h2>
+    <div class="mermaid">
+erDiagram
+    UTILISATEURS ||--o{ PERSONNAGES : "crée"
+    UTILISATEURS ||--o{ AVIS : "rédige"
+    PERSONNAGES ||--o{ AVIS : "reçoit"
+    PERSONNAGES ||--o{ PERSONNAGE_ACCESSOIRES : "porte"
+    ACCESSOIRES ||--o{ PERSONNAGE_ACCESSOIRES : "équipe"
+    UTILISATEURS {
+        int id PK
+        varchar email UK
+        varchar pseudo UK
+        varchar mot_de_passe "argon2id"
+        enum role "joueur, employe, admin"
+        enum statut "actif, suspendu"
+        bool doit_changer_mdp
+    }
+    PERSONNAGES {
+        int id PK
+        int utilisateur_id FK
+        varchar nom UK
+        enum genre
+        enum forme_visage
+        enum forme_yeux
+        enum forme_nez
+        enum forme_bouche
+        enum coiffure
+        char couleur_peau
+        char couleur_cheveux
+        char couleur_yeux
+        enum statut "en_attente, valide"
+        bool partage
+        datetime cree_le
+    }
+    ACCESSOIRES {
+        int id PK
+        varchar nom UK
+        enum categorie "vetement, armure, arme, accessoire"
+        varchar visuel
+        char couleur
+        bool actif
+    }
+    PERSONNAGE_ACCESSOIRES {
+        int personnage_id PK,FK
+        int accessoire_id PK,FK
+        enum categorie "UNIQUE avec personnage_id"
+    }
+    AVIS {
+        int id PK
+        int personnage_id FK
+        int utilisateur_id FK
+        tinyint note "CHECK 1 à 5"
+        varchar commentaire
+        enum statut "en_attente, valide, refuse"
+    }
+    </div>
+    <h3>Règles de gestion traduites dans le schéma</h3>
+    <ul>
+        <li>E-mail, pseudo, nom de personnage et nom d'article uniques : contraintes <code>UNIQUE</code>.</li>
+        <li>Un seul article par catégorie sur un personnage : <code>UNIQUE (personnage_id, categorie)</code> dans la table d'association.</li>
+        <li>Un seul avis par joueur et par personnage : <code>UNIQUE (personnage_id, utilisateur_id)</code> ; note de 1 à 5 : <code>CHECK</code>.</li>
+        <li>Un personnage ne peut être partagé que s'il est validé : <code>CHECK (partage = FALSE OR statut = 'valide')</code>.</li>
+        <li>Supprimer un compte supprime ses personnages, leur équipement et les avis (<code>ON DELETE CASCADE</code>).</li>
+        <li>Traits physiques en <code>ENUM</code> : la base refuse toute valeur hors liste, en plus du contrôle PHP.</li>
+        <li>Le compte administrateur est créé par le script SQL : aucune fonctionnalité ne permet d'en créer un.</li>
+    </ul>
+    <h3>Collections MongoDB</h3>
+    <table>
+        <tr><th>Collection</th><th>Exemple de document</th></tr>
+        <tr><td><code>logs</code></td><td><code>{ type: "personnage.equipement", acteur: { id: 3, pseudo: "Lyra" }, personnage: { id: 1, nom: "Aelwen" },
+            details: { changements: ["Arme : Épée runique → Arc sylvestre"] }, ip: "…", cree_le: ISODate() }</code></td></tr>
+        <tr><td><code>messages</code></td><td><code>{ email, pseudo, demande, cree_le }</code> : trace des demandes de contact</td></tr>
+    </table>
+    <p>Le nom du personnage et le pseudo sont recopiés dans le log : l'historique reste lisible même après un renommage ou une suppression.</p>
+</section>
+
+<section class="saut">
+    <h2>5. Diagramme de cas d'utilisation</h2>
+    <div class="mermaid">
+flowchart LR
+    V(["👤 Visiteur"])
+    J(["🧙 Joueur"])
+    E(["🛡️ Employé"])
+    A(["👑 Administrateur"])
+    subgraph Application FantasyRealm
+        UC1["Consulter l'accueil et les pages légales"]
+        UC2["Parcourir et filtrer la galerie"]
+        UC3["Voir le détail d'un personnage et ses avis"]
+        UC4["Contacter le support"]
+        UC5["Créer un compte / se connecter / mot de passe oublié"]
+        UC6["Créer et personnaliser un personnage"]
+        UC7["Équiper, partager, dupliquer, supprimer"]
+        UC8["Déposer un avis"]
+        UC9["Valider ou rejeter un nom (motif)"]
+        UC10["Modérer les avis"]
+        UC11["Gérer les articles"]
+        UC12["Suspendre / supprimer un joueur ou un personnage"]
+        UC13["Gérer les comptes employés"]
+        UC14["Consulter les logs"]
+    end
+    V --- UC1 & UC2 & UC3 & UC4 & UC5
+    J --- UC6 & UC7 & UC8
+    E --- UC9 & UC10 & UC11 & UC12
+    A --- UC13 & UC14
+    J -. hérite de .-> V
+    A -. hérite de .-> E
+    </div>
+    <p>Le joueur peut faire tout ce que fait un visiteur ; l'administrateur tout ce que fait un employé.</p>
+</section>
+
+<section class="saut">
+    <h2>6. Diagrammes de séquence</h2>
+    <h3>Création d'un personnage puis validation de son nom</h3>
+    <div class="mermaid">
+sequenceDiagram
+    actor J as Joueur
+    participant N as Navigateur
+    participant R as Router (index.php)
+    participant C as EspaceController
+    participant P as Personnage (PDO)
+    participant DB as MySQL
+    participant L as ActivityLog
+    participant M as MongoDB
+    actor E as Employé
+    J->>N: remplit le formulaire (aperçu en direct via GET /apercu)
+    N->>R: POST /espace/creer + jeton CSRF
+    R->>R: vérifie le jeton CSRF et le rôle « joueur »
+    R->>C: creer()
+    C->>C: valide le nom et les traits (listes blanches)
+    C->>P: nomExiste(nom)
+    P->>DB: SELECT 1 FROM personnages WHERE nom = ?
+    C->>P: creer(...)
+    P->>DB: INSERT INTO personnages (...) statut = 'en_attente'
+    C->>L: ajouter("personnage.creation")
+    L->>M: insertOne(logs)
+    C-->>N: 303 vers /espace/personnage?id=…
+    E->>R: POST /gestion/personnage/valider
+    R->>R: CSRF + rôle employé ou admin
+    R->>P: valider(id)
+    P->>DB: UPDATE … SET statut = 'valide' WHERE id = ? AND statut = 'en_attente'
+    R-->>J: e-mail « Votre personnage est validé » (PHPMailer)
+    </div>
+</section>
+<section class="saut">
+    <h3>Connexion</h3>
+    <div class="mermaid">
+sequenceDiagram
+    actor U as Utilisateur
+    participant A as AuthController
+    participant T as TentativeConnexion
+    participant DB as MySQL
+    U->>A: POST /connexion (e-mail, mot de passe, CSRF)
+    A->>T: estBloque(e-mail, IP) ?
+    T->>DB: SELECT échecs des 15 dernières minutes
+    alt plus de 5 échecs (e-mail) ou 20 (IP)
+        A-->>U: « Trop de tentatives »
+    else
+        A->>DB: SELECT * FROM utilisateurs WHERE email = ?
+        A->>A: password_verify (hash factice si compte inconnu)
+        alt mot de passe faux
+            A->>T: enregistrerEchec
+            A-->>U: « E-mail ou mot de passe incorrect »
+        else compte suspendu
+            A-->>U: « Ce compte est suspendu »
+        else succès
+            A->>A: session_regenerate_id, nouveau jeton CSRF
+            A-->>U: redirection vers l'espace du rôle (ou changement de mot de passe imposé)
+        end
+    end
+    </div>
+
+    <h2>7. Sécurité (résumé)</h2>
+    <table>
+        <tr><th>Risque</th><th>Protection</th></tr>
+        <tr><td>Injection SQL</td><td>PDO, requêtes préparées, <code>EMULATE_PREPARES = false</code>, noms de colonnes jamais issus de la saisie</td></tr>
+        <tr><td>Injection NoSQL</td><td>Filtres MongoDB construits avec des valeurs typées (chaînes), expressions régulières échappées</td></tr>
+        <tr><td>XSS</td><td>Échappement systématique (<code>e()</code>), SVG construit à partir de listes fermées, CSP sans script en ligne</td></tr>
+        <tr><td>CSRF</td><td>Jeton vérifié par le routeur pour toute requête POST, cookie <code>SameSite=Lax</code></td></tr>
+        <tr><td>Mots de passe</td><td>Règles CNIL, hash argon2id, mot de passe provisoire aléatoire (<code>random_int</code>) à changer obligatoirement</td></tr>
+        <tr><td>Force brute</td><td>5 échecs par e-mail ou 20 par IP en 15 minutes</td></tr>
+        <tr><td>Sessions</td><td>Cookie HttpOnly / Secure, régénération à la connexion, expiration, compte suspendu déconnecté immédiatement</td></tr>
+        <tr><td>Contrôle d'accès</td><td>Rôle exigé déclaré sur chaque route ; un joueur n'agit que sur ses personnages ; rôle imposé dans les requêtes de suspension</td></tr>
+        <tr><td>Données invalides</td><td>Validation serveur de chaque champ, refus des requêtes non UTF-8 (400)</td></tr>
+        <tr><td>Fuite d'informations</td><td>Erreurs masquées en production, version d'Apache/PHP masquée, messages neutres (connexion, mot de passe oublié)</td></tr>
+    </table>
+</section>
+
+<section class="saut">
+    <h2>8. Déploiement</h2>
+    <p><strong>Démarche.</strong> L'application a besoin de PHP 8.3 avec l'extension MongoDB, d'une base MySQL, d'une base MongoDB et d'un
+        serveur SMTP, le tout en HTTPS. J'ai retenu <strong>alwaysdata</strong> (hébergeur français : PHP, MySQL, SMTP, SSH et certificat
+        Let's Encrypt, offre gratuite de 100 Mo) et <strong>MongoDB Atlas</strong> (offre gratuite M0, hébergée en Europe).
+        Heroku et fly.io, cités dans l'énoncé, demandent une carte bancaire ou une image Docker à maintenir ; Vercel ne fait pas tourner PHP nativement.</p>
+    <h3>Étapes</h3>
+    <ol>
+        <li><strong>MongoDB Atlas</strong> : créer un cluster M0 (région Europe), un utilisateur limité au rôle <code>readWrite</code> sur la base
+            <code>fantasyrealm</code>, autoriser l'IP du serveur, copier la chaîne <code>mongodb+srv://…</code>.</li>
+        <li><strong>alwaysdata</strong> : créer le compte, choisir PHP 8.3, vérifier l'extension <code>mongodb</code> (sinon <code>pecl install mongodb</code>),
+            créer la base MySQL et son utilisateur, créer le site avec pour racine le dossier <code>public/</code>, activer HTTPS et la redirection.</li>
+        <li><strong>Code</strong> (en SSH) :
+<pre>git clone https://github.com/&lt;compte&gt;/fantasyrealm.git
+cd fantasyrealm
+composer install --no-dev --optimize-autoloader
+cp .env.example .env &amp;&amp; nano .env      # APP_ENV=prod, accès MySQL, MongoDB, SMTP
+chmod 600 .env</pre></li>
+        <li><strong>Base de données</strong> : importer <code>database/01_schema.sql</code> puis <code>database/02_donnees.sql</code>
+            (données de démonstration utiles au jury) avec phpMyAdmin ou
+            <code>mysql -h … -u … -p base &lt; database/01_schema.sql</code>.</li>
+        <li><strong>Vérifications</strong> : HTTPS actif, <code>/.env</code> et <code>/src/</code> inaccessibles (404), en-têtes de sécurité présents
+            (<code>curl -I</code>), parcours complet avec les comptes de test, e-mails reçus, logs visibles dans l'administration.</li>
+        <li><strong>Mises à jour</strong> : fusion dans <code>main</code>, puis <code>git pull</code> et <code>composer install --no-dev</code> sur le serveur.</li>
+    </ol>
+    <p class="note">[À COMPLÉTER après la mise en ligne : URL de production, captures de la configuration, éventuelles difficultés rencontrées.]</p>
+</section>
+
+<script>
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict', fontFamily: 'Segoe UI, sans-serif' });
+    mermaid.run({ querySelector: '.mermaid' }).then(() => { window.__pret = true; }).catch(() => { window.__pret = true; });
+</script>
+</body>
+</html>
