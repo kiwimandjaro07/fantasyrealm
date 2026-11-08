@@ -50,7 +50,9 @@ final class ApparenceTest extends TestCase
         $equipement = [['categorie' => 'arme', 'visuel' => 'epee', 'couleur' => '"/><script>alert(1)</script>']];
         $svg = Apparence::svg(Apparence::DEFAUT, $equipement);
         self::assertStringNotContainsString('<script', $svg);
-        self::assertStringContainsString('#888888', $svg); // remplacée par la couleur de secours
+        // La couleur invalide est remplacée par la couleur de secours #888888
+        $secours = Apparence::svg(Apparence::DEFAUT, [['categorie' => 'arme', 'visuel' => 'epee', 'couleur' => '#888888']]);
+        self::assertSame($secours, $svg);
     }
 
     public function testTousLesEquipementsSeDessinent(): void
