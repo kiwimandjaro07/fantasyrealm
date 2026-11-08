@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Database;
+use App\Services\Apparence;
 
 /**
  * Personnages et leur équipement.
@@ -247,7 +248,7 @@ final class Personnage
         $changements = [];
         foreach (array_unique([...array_keys($avant), ...array_keys($apres)]) as $cat) {
             if (($avant[$cat] ?? null) !== ($apres[$cat] ?? null)) {
-                $changements[] = sprintf('%s : %s → %s', $cat, $avant[$cat] ?? 'aucun', $apres[$cat] ?? 'aucun');
+                $changements[] = sprintf('%s : %s → %s', Apparence::CATEGORIES[$cat] ?? $cat, $avant[$cat] ?? 'aucun', $apres[$cat] ?? 'aucun');
             }
         }
 
