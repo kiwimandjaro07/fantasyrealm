@@ -18,15 +18,37 @@ use App\Core\Security;
 
 define('ROOT', dirname(__DIR__));
 
+// Par défaut, aucune erreur détaillée n'est affichée : tant que la configuration n'est pas lue,
+// on se comporte comme en production (une erreur ne doit jamais révéler de chemin ni de secret).
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+
 require ROOT . '/vendor/autoload.php';
 
 // Variables d'environnement : les secrets (mots de passe des bases, SMTP) ne sont pas dans le code
-Dotenv\Dotenv::createImmutable(ROOT)->safeLoad();
+try {
+    Dotenv\Dotenv::createImmutable(ROOT)->safeLoad();
+} catch (Dotenv\Exception\ExceptionInterface $e) {
+    error_log('[Configuration] ' . $e->getMessage()); // détail dans le journal du serveur uniquement
+    http_response_code(500);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'Service momentanément indisponible.';
+    exit;
+}
 date_default_timezone_set('Europe/Paris');
 
 $dev = ($_ENV['APP_ENV'] ?? 'prod') === 'dev';
-ini_set('display_errors', $dev ? '1' : '0');   // jamais d'erreur détaillée en production
-error_reporting(E_ALL);
+ini_set('display_errors', $dev ? '1' : '0');   // détails des erreurs uniquement en développement
+
+// En production, toute requête en HTTP est redirigée vers HTTPS (connexion chiffrée obligatoire)
+$https = ($_SERVER['HTTPS'] ?? '') === 'on' || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+if (!$dev && !$https && PHP_SAPI !== 'cli') {
+    // Le domaine vient de la configuration (APP_URL), pas de l'en-tête Host envoyé par le client
+    $hote = parse_url($_ENV['APP_URL'] ?? '', PHP_URL_HOST) ?: 'localhost';
+    header('Location: https://' . $hote . ($_SERVER['REQUEST_URI'] ?? '/'), true, 301);
+    exit;
+}
+
 if (!$dev) {
     set_exception_handler(static function (Throwable $e): void {
         error_log((string) $e);
@@ -110,4 +132,6 @@ $r->post('/admin/employes/statut', [AdminController::class, 'statutEmploye'], $a
 $r->post('/admin/employes/supprimer', [AdminController::class, 'supprimerEmploye'], $admin);
 $r->get('/admin/logs', [AdminController::class, 'logs'], $admin);
 
-$r->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+// Une requête HEAD (vérification de disponibilité) est traitée comme un GET ; le serveur n'envoie pas le corps
+$methode = $_SERVER['REQUEST_METHOD'] === 'HEAD' ? 'GET' : $_SERVER['REQUEST_METHOD'];
+$r->dispatch($methode, $_SERVER['REQUEST_URI']);
