@@ -282,7 +282,26 @@ chmod 600 .env</pre></li>
             (<code>curl -I</code>), parcours complet avec les comptes de test, e-mails reçus, logs visibles dans l'administration.</li>
         <li><strong>Mises à jour</strong> : fusion dans <code>main</code>, puis <code>git pull</code> et <code>composer install --no-dev</code> sur le serveur.</li>
     </ol>
-    <p class="note">[À COMPLÉTER après la mise en ligne : URL de production, captures de la configuration, éventuelles difficultés rencontrées.]</p>
+    <h3>Mise en ligne réalisée</h3>
+    <p>Application en production : <strong>https://kiwimandjaro07.alwaysdata.net</strong> (code : https://github.com/kiwimandjaro07/fantasyrealm).</p>
+    <p><strong>Difficultés rencontrées et solutions :</strong></p>
+    <ul>
+        <li><strong>Extension PHP MongoDB absente</strong> sur l'hébergement : compilée avec l'outil d'alwaysdata
+            <code>ad_install_pecl mongodb</code>, puis déclarée dans le php.ini (menu Environnement) :
+            <code>extension=/home/kiwimandjaro07/php-ext/mongodb-8.3.so</code>.</li>
+        <li><strong>Accès refusé à MySQL (erreur 1044)</strong> : alwaysdata préfixe automatiquement le nom des bases ;
+            la base s'appelle <code>kiwimandjaro07__fantasyrealm</code>. Vérification avec <code>SHOW DATABASES;</code>.</li>
+        <li><strong>Accès réseau à MongoDB Atlas</strong> : l'offre gratuite d'alwaysdata n'ayant pas d'adresse IP sortante fixe,
+            la liste d'accès d'Atlas autorise <code>0.0.0.0/0</code> ; la base reste protégée par un utilisateur dédié et un
+            mot de passe, et la connexion est chiffrée (TLS).</li>
+        <li><strong>Fichier .env mal rempli</strong> : une valeur contenant des espaces faisait échouer la lecture de la
+            configuration, et le message d'erreur affichait des chemins du serveur. Correction du code : les erreurs ne sont plus
+            jamais affichées avant la lecture de la configuration, et une configuration invalide renvoie une page neutre.</li>
+        <li><strong>HTTPS</strong> : redirection automatique de HTTP vers HTTPS ajoutée dans l'application, en plus de l'en-tête HSTS.</li>
+    </ul>
+    <p>Vérifications effectuées après la mise en ligne : pages publiques en 200, fichiers <code>.env</code>, <code>composer.json</code>
+        et <code>vendor/</code> inaccessibles (404), en-têtes de sécurité présents, cookie de session <code>Secure; HttpOnly; SameSite=Lax</code>,
+        connexion d'un joueur, requête sans jeton CSRF refusée (403), accès à l'espace employé par un joueur refusé (403).</p>
 </section>
 
 <script>
