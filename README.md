@@ -5,6 +5,14 @@ création, personnalisation (avatar SVG avec aperçu en direct), équipement, pa
 
 Réalisé avec l'assistant IA Claude (Anthropic), sous ma direction : voir `docs/gestion-de-projet.pdf`.
 
+## Liens
+
+| Livrable | Adresse |
+|---|---|
+| Application en ligne | https://kiwimandjaro07.alwaysdata.net |
+| Dépôt GitHub | https://github.com/kiwimandjaro07/fantasyrealm |
+| Gestion de projet (Trello) | https://trello.com/b/6M4snPjU/fantasyrealm-ecf |
+
 ## Technologies
 
 PHP 8.3 (MVC sans framework, PDO), MySQL 8, MongoDB 7, HTML/CSS/JavaScript natifs, PHPMailer, PHPUnit, Docker.
